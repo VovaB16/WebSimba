@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using WebSimba.Data;
 using WebSimba.Data.Entities;
@@ -8,15 +9,16 @@ using WebSimba.Mapper;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddAutoMapper(typeof(AppMapperProfile));
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// ϳ��������� �� SQLite ����� ��������������� ����
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddAutoMapper(typeof(AppMapperProfile));
 
 var app = builder.Build();
 
@@ -28,14 +30,27 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
-
+app.UseRouting();
 app.MapControllers();
 
 var dir = builder.Configuration["ImageDir"];
-Console.WriteLine("-------Image dir {0}-------", dir);
+
+if (string.IsNullOrEmpty(dir))
+{
+    Console.WriteLine("ImageDir is not set in the configuration.");
+    // Можливо, ви хочете задати дефолтний шлях, якщо конфігурація відсутня:
+    dir = "DefaultImages"; // Можете змінити на потрібний вам дефолтний каталог.
+}
+
+Console.WriteLine("-------Image dir  {0}------", dir);
+
 var dirPath = Path.Combine(Directory.GetCurrentDirectory(), dir);
+
 if (!Directory.Exists(dirPath))
+{
     Directory.CreateDirectory(dirPath);
+}
+
 
 //app.UseStaticFiles();
 app.UseStaticFiles(new StaticFileOptions
@@ -47,7 +62,7 @@ app.UseStaticFiles(new StaticFileOptions
 var imageNo = Path.Combine(dirPath, "noimage.jpg");
 if (!File.Exists(imageNo))
 {
-    string url = "https://m.media-amazon.com/images/I/71QaVHD-ZDL.jpg";
+    string url = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png";
     try
     {
         using (HttpClient client = new HttpClient())
@@ -70,7 +85,7 @@ if (!File.Exists(imageNo))
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"-----An error occurred: {ex.Message}------");
+        Console.WriteLine($"An error occurred: {ex.Message}");
     }
 }
 
