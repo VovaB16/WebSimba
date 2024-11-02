@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSimba", "WebAndroidServer\WebSimba.csproj", "{E6148C77-D93C-4C48-AAAB-6C2FB648407C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAndroidServer", "WebAndroidServer\WebAndroidServer.csproj", "{E6148C77-D93C-4C48-AAAB-6C2FB648407C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using WebSimba.Data.Entities;
 
 namespace WebSimba.Data.Entities
 {
@@ -15,6 +14,7 @@ namespace WebSimba.Data.Entities
         [StringLength(255)]
         public string? Image { get; set; }
 
+        // Зв'язок один до багатьох з продуктами
         public virtual List<ProductEntity>? Products { get; set; }
     }
 }
